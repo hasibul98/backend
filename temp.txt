@@ -1,0 +1,62 @@
+// file: index.js
+// "type": "module",
+
+const express = require( "express" );
+const mysql = require( "mysql2/promise" );
+const cors = require( "cors" );
+const bodyParser = require( "body-parser" );
+
+const app = express();
+app.use( cors() );
+app.use( bodyParser.json() );
+
+async function startServer ()
+{
+    try
+    {
+        const db = await mysql.createConnection( {
+            host: "localhost",
+            user: "root",
+            password: "root",
+            // database: "your_database_name",
+        } );
+
+        console.log( "MySQL connected successfully" );
+
+        // এখানে তোমার route বা অন্য কাজগুলো করতে পারো
+        // app.get( "/", ( req, res ) =>
+        // {
+        //     res.send( "Server is running!" );
+        // } );
+
+        app.listen( 5000, () =>
+        {
+            console.log( "Server started on port 5000" );
+        } );
+
+    } catch ( err )
+    {
+        console.error( "Database connection failed:", err );
+    }
+}
+
+startServer();
+
+
+// db.connect( ( err ) =>
+// {
+//     if ( err )
+//     {
+//         console.error( "Database connection failed: " + err.stack );
+//         return;
+//     }
+//     console.log( "Connected to MySQL database." );
+// } );
+
+
+
+// সার্ভার রান করা
+// app.listen( 5000, () =>
+// {
+//     console.log( "Server is running on port 5000" );
+// } );
