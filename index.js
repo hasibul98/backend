@@ -5,6 +5,7 @@ const express = require( "express" );
 const mysql = require( "mysql2/promise" );
 const cors = require( "cors" );
 const bodyParser = require( "body-parser" );
+const bcrypt = require( 'bcryptjs' );
 
 const app = express();
 app.use( cors() );
@@ -42,7 +43,9 @@ async function startServer ()
             }
             try
             {
-                await db.query( "INSERT INTO users (fullname, email, password) VALUES(?, ?, ?)", [ name, email, password ] );
+                // Hash the password before saving it to the database
+                const hashedPassword = await bcrypt.hash( password, 10 ); // 10 is the salt rounds
+                await db.query( "INSERT INTO users (fullname, email, password) VALUES(?, ?, ?)", [ name, email, hashedPassword ] );
                 res.status( 201 ).json( { message: "user registered successfully" } );
             } catch ( err )
             {
